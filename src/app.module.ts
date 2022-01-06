@@ -2,22 +2,24 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProxyRMQModule } from './proxyrmq/proxyrmq.module';
-import { ConfigModule } from '@nestjs/config'
-import { MailerModule } from '@nestjs-modules/mailer'
+import { ConfigModule,ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
+
+const config_service = new ConfigService();
 
 @Module({
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'email-smtp.us-east-1.amazonaws.com',
+        host: config_service.get("TRANSPORT_HOST"),
         port: 587,
         secure: false,
         tls: {
           ciphers: 'SSLv3'
         },
         auth: {
-          user: 'AKIA4KCP6CKKMS2EP4NU',
-          pass: 'BBMCxEYxkR5nbvAsC++XNSrWBMtIp9YOQ0WAoBTrlE9+'
+          user: config_service.get("AUTH_USER"),
+          pass: config_service.get("AUTH_PASS_KEY")
         }
       }
     }),
